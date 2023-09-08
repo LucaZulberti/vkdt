@@ -102,7 +102,12 @@ int prims_load_with_flags(
   }
   p->shape[shapeid].data_size = lseek(p->shape[shapeid].fd, 0, SEEK_END);
   lseek(p->shape[shapeid].fd, 0, SEEK_SET);
+#ifndef __APPLE__
   readahead(p->shape[shapeid].fd, 0, p->shape[shapeid].data_size);
+#else
+  fcntl(p->shape[shapeid].fd, F_RDAHEAD, 1);
+  read(p->shape[shapeid].fd, 0, p->shape[shapeid].data_size);
+#endif
   p->shape[shapeid].data = mmap(0, p->shape[shapeid].data_size, mmap_flags, MAP_SHARED,
                                p->shape[shapeid].fd, 0);
   close(p->shape[shapeid].fd);
