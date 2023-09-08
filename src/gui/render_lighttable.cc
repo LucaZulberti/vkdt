@@ -559,7 +559,7 @@ void render_lighttable_right_panel(int hotkey)
       {
         dt_db_image_path(&vkdt.db, sel[i], filename, sizeof(filename));
         uint64_t hash = hash64(filename);
-        if(snprintf(realname, sizeof(realname), "%s/nodes/%lx.dat", dt_pipe.homedir, hash) < int(sizeof(realname)))
+        if(snprintf(realname, sizeof(realname), "%s/nodes/%llx.dat", dt_pipe.homedir, hash) < int(sizeof(realname)))
           unlink(realname); // maybe remove node positions ~/.config/vkdt/nodes/<hash>.dat
         realpath(filename, realname);
         unlink(realname);

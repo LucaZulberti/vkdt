@@ -257,7 +257,7 @@ dt_vkalloc_check(dt_vkalloc_t *a)
   uint64_t num_unused = DLIST_LENGTH(a->unused);
   if(num_used + num_free + num_unused != a->pool_size)
   {
-    fprintf(stderr, "used %lu free %lu unused %lu != %lu\n", num_used, num_free, num_unused, a->pool_size);
+    fprintf(stderr, "used %llu free %llu unused %llu != %llu\n", num_used, num_free, num_unused, a->pool_size);
     return 1;
   }
 
@@ -332,4 +332,3 @@ dt_vkalloc_check(dt_vkalloc_t *a)
 
   return 0; // yay, we made it!
 }
-
