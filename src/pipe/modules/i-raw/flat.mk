@@ -1,6 +1,9 @@
 RAWSPEED_I=../ext/rawspeed
 RAWSPEED_L=../built/ext/rawspeed
 MOD_CFLAGS=-std=c++17 -Wall -I$(RAWSPEED_I)/src/librawspeed/ -I$(RAWSPEED_L)/src/ -I$(RAWSPEED_I)/src/external/ $(shell pkg-config --cflags pugixml libjpeg)
+ifeq ($(shell uname),Darwin)
+MOD_CFLAGS += -I/opt/homebrew/opt/libomp/include
+endif
 MOD_LDFLAGS=-L$(RAWSPEED_L) -lrawspeed -lz $(shell pkg-config --libs pugixml libjpeg)
 ifeq ($(CXX),clang++)
 # omp has no pkg-config. this sucks so much:
