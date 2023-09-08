@@ -4,6 +4,12 @@
 #include <string.h>
 #include <strings.h>
 
+#ifndef __APPLE__
+  #define os_qsort_r qsort_r
+#else
+  #define os_qsort_r(a,b,c,d,e) qsort_r(a,b,c,e,d)
+#endif
+
 typedef enum dt_image_label_t
 {
   s_image_label_none     = 0,

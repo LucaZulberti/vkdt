@@ -43,14 +43,22 @@ dt_db_cleanup(dt_db_t *db)
 }
 
 static int
+#ifndef __APPLE__
 compare_id(const void *a, const void *b, void *arg)
+#else
+compare_id(void *arg, const void *a, const void *b)
+#endif
 {
   const uint32_t *ia = a, *ib = b;
   return ia[0] - ib[0];
 }
 
 static int
+#ifndef __APPLE__
 compare_filename(const void *a, const void *b, void *arg)
+#else
+compare_filename(void *arg, const void *a, const void *b)
+#endif
 {
   dt_db_t *db = arg;
   const uint32_t *ia = a, *ib = b;
@@ -58,7 +66,11 @@ compare_filename(const void *a, const void *b, void *arg)
 }
 
 static int
+#ifndef __APPLE__
 compare_rating(const void *a, const void *b, void *arg)
+#else
+compare_rating(void *arg, const void *a, const void *b)
+#endif
 {
   dt_db_t *db = arg;
   const uint32_t *ia = a, *ib = b;
@@ -67,7 +79,11 @@ compare_rating(const void *a, const void *b, void *arg)
 }
 
 static int
+#ifndef __APPLE__
 compare_labels(const void *a, const void *b, void *arg)
+#else
+compare_labels(void *arg, const void *a, const void *b)
+#endif
 {
   dt_db_t *db = arg;
   const uint32_t *ia = a, *ib = b;
@@ -75,7 +91,11 @@ compare_labels(const void *a, const void *b, void *arg)
 }
 
 static int
+#ifndef __APPLE__
 compare_createdate(const void *a, const void *b, void *arg)
+#else
+compare_createdate(void *arg, const void *a, const void *b)
+#endif
 { // you ask for complicated sort, you get slow and stupid.
   // we don't store the date in the db, since there is in general no clear 1:1 mapping
   // between images and cfg file/graph. also, loading a directory becomes painfully slow
@@ -108,7 +128,11 @@ compare_createdate(const void *a, const void *b, void *arg)
 }
 
 static int
+#ifndef __APPLE__
 compare_filetype(const void *a, const void *b, void *arg)
+#else
+compare_filetype(void *arg, const void *a, const void *b)
+#endif
 {
   dt_db_t *db = arg;
   const uint32_t *ia = a, *ib = b;
@@ -162,19 +186,19 @@ dt_db_update_collection(dt_db_t *db)
   case s_prop_none:
     break;
   case s_prop_filename:
-    qsort_r(db->collection, db->collection_cnt, sizeof(db->collection[0]), compare_filename, db);
+    os_qsort_r(db->collection, db->collection_cnt, sizeof(db->collection[0]), compare_filename, db);
     break;
   case s_prop_rating:
-    qsort_r(db->collection, db->collection_cnt, sizeof(db->collection[0]), compare_rating, db);
+    os_qsort_r(db->collection, db->collection_cnt, sizeof(db->collection[0]), compare_rating, db);
     break;
   case s_prop_labels:
-    qsort_r(db->collection, db->collection_cnt, sizeof(db->collection[0]), compare_labels, db);
+    os_qsort_r(db->collection, db->collection_cnt, sizeof(db->collection[0]), compare_labels, db);
     break;
   case s_prop_createdate:
-    qsort_r(db->collection, db->collection_cnt, sizeof(db->collection[0]), compare_createdate, db);
+    os_qsort_r(db->collection, db->collection_cnt, sizeof(db->collection[0]), compare_createdate, db);
     break;
   case s_prop_filetype:
-    qsort_r(db->collection, db->collection_cnt, sizeof(db->collection[0]), compare_filetype, db);
+    os_qsort_r(db->collection, db->collection_cnt, sizeof(db->collection[0]), compare_filetype, db);
     break;
   }
 }
@@ -419,19 +443,19 @@ const uint32_t *dt_db_selection_get(dt_db_t *db)
   case s_prop_none:
     break;
   case s_prop_filename:
-    qsort_r(db->selection, db->selection_cnt, sizeof(db->selection[0]), compare_filename, db);
+    os_qsort_r(db->selection, db->selection_cnt, sizeof(db->selection[0]), compare_filename, db);
     break;
   case s_prop_rating:
-    qsort_r(db->selection, db->selection_cnt, sizeof(db->selection[0]), compare_rating, db);
+    os_qsort_r(db->selection, db->selection_cnt, sizeof(db->selection[0]), compare_rating, db);
     break;
   case s_prop_labels:
-    qsort_r(db->selection, db->selection_cnt, sizeof(db->selection[0]), compare_labels, db);
+    os_qsort_r(db->selection, db->selection_cnt, sizeof(db->selection[0]), compare_labels, db);
     break;
   case s_prop_createdate:
-    qsort_r(db->selection, db->selection_cnt, sizeof(db->selection[0]), compare_createdate, db);
+    os_qsort_r(db->selection, db->selection_cnt, sizeof(db->selection[0]), compare_createdate, db);
     break;
   case s_prop_filetype:
-    qsort_r(db->selection, db->selection_cnt, sizeof(db->selection[0]), compare_filetype, db);
+    os_qsort_r(db->selection, db->selection_cnt, sizeof(db->selection[0]), compare_filetype, db);
     break;
   }
   return db->selection;
@@ -454,7 +478,7 @@ int dt_db_read(dt_db_t *db, const char *filename)
     lno++;
 
     // scan filename:rating|labels:number
-    sscanf(line, "%[^:]:%[^:]:%lu", imgn, what, &num);
+    sscanf(line, "%[^:]:%[^:]:%llu", imgn, what, &num);
 
     if(!strcmp(imgn, "sort"))
     {
@@ -503,7 +527,7 @@ int dt_db_write(const dt_db_t *db, const char *filename, int append)
   fprintf(f, "sort:%s:\n", c);
   c = dt_db_property_text;
   for(int i=0;i<db->collection_filter;i++,c++) while(*c) c++;
-  fprintf(f, "filter:%s:%lu\n", c, db->collection_filter_val);
+  fprintf(f, "filter:%s:%llu\n", c, db->collection_filter_val);
   for(int i=0;i<db->image_cnt;i++)
   {
     if( db->image[i].rating          > 0) fprintf(f, "%s:rating:%u\n", db->image[i].filename, db->image[i].rating);
@@ -537,7 +561,7 @@ int dt_db_add_to_collection(const dt_db_t *db, const uint32_t imgid, const char 
   snprintf(dirname, sizeof(dirname), "%s/tags/%s", db->basedir, cname);
   fs_mkdir(dirname, 0755); // ignore error, might exist already (which is fine)
   char linkname[1040];
-  snprintf(linkname, sizeof(linkname), "%s/tags/%s/%lx.cfg", db->basedir, cname, hash);
+  snprintf(linkname, sizeof(linkname), "%s/tags/%s/%llx.cfg", db->basedir, cname, hash);
   int err = symlink(filename, linkname);
   if(err) return 1;
   return 0;
@@ -549,7 +573,7 @@ void dt_db_remove_selected_images(
     const int del)
 {
   // sort selection array by id:
-  qsort_r(db->selection, db->selection_cnt, sizeof(db->selection[0]), compare_id, db);
+  os_qsort_r(db->selection, db->selection_cnt, sizeof(db->selection[0]), compare_id, db);
 
   // go through sorted list of imgid, largest id first:
   char fullfn[2048] = {0};
