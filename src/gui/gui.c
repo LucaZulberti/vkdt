@@ -449,7 +449,12 @@ dt_gui_read_tags()
       struct stat buf;
       snprintf(filename, sizeof(filename), "%s/tags/%s", vkdt.db.basedir, ep->d_name);
       stat(filename, &buf);
-      uint64_t t = buf.st_mtim.tv_sec;
+      uint64_t t;
+#ifndef __APPLE__
+      t = buf.st_mtim.tv_sec;
+#else
+      t = buf.st_mtimespec.tv_sec;
+#endif
       if(vkdt.tag_cnt < sizeof(vkdt.tag)/sizeof(vkdt.tag[0]))
       { // add
         int i = vkdt.tag_cnt++;
@@ -507,4 +512,3 @@ void dt_gui_notification(const char *msg, ...)
   vkdt.wstate.notification_time = glfwGetTime();
   va_end(args);
 }
-
