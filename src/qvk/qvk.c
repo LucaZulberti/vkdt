@@ -51,6 +51,7 @@ const char *vk_requested_layers[] = {
 const char *vk_requested_instance_extensions[] = {
   VK_EXT_DEBUG_UTILS_EXTENSION_NAME,
   VK_EXT_DEBUG_REPORT_EXTENSION_NAME,
+  VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME
 };
 
 static const VkApplicationInfo vk_app_info = {
@@ -277,6 +278,7 @@ qvk_init(const char *preferred_device_name, int preferred_device_id)
   VkInstanceCreateInfo inst_create_info = {
     .sType                   = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
     .pApplicationInfo        = &vk_app_info,
+    .flags                   = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR,
 #ifdef QVK_ENABLE_VALIDATION
     .enabledLayerCount       = LENGTH(vk_requested_layers),
     .ppEnabledLayerNames     = vk_requested_layers,
