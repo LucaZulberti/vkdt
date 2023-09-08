@@ -24,6 +24,7 @@ void write_sink(
 
   // go through all 4x4 blocks
   // parallelise via our thread pool or openmp or what?
+  //   - LucaZulberti: thread pool pls! A simple pthread/C++ library with C exports? (https://stackoverflow.com/questions/17235053/c11-alternative-to-openmp-with-clang)
   // probably usually bc1 thumbnails are too small to warrant a good speedup.
   const int bx = wd/4, by = ht/4;
   size_t num_blocks = bx * (uint64_t)by;

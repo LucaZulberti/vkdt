@@ -144,11 +144,15 @@ MOD_GLOBAL_CFLAGS=-Ipipe -I. -fPIC
 
 # expand all cflags/ldflags/deps/extra-c from flat.mk:
 $(foreach mod,$(FLATMK),\
+  $(eval MOD_CC=$(CC))\
+  $(eval MOD_CXX=$(CXX))\
   $(eval MOD_CFLAGS=)\
   $(eval MOD_LDFLAGS=)\
   $(eval MOD_DEPS=)\
   $(eval MOD_C=)\
   $(eval include pipe/modules/$(mod)/flat.mk)\
+  $(eval MOD_$(mod)_CC=$(MOD_CC))\
+  $(eval MOD_$(mod)_CXX=$(MOD_CXX))\
   $(eval MOD_$(mod)_CFLAGS=$(MOD_CFLAGS))\
   $(eval MOD_$(mod)_LDFLAGS=$(MOD_LDFLAGS) $(call generate_shared_flags,lib$(mod)))\
   $(eval MOD_$(mod)_DEPS=$(MOD_DEPS))\
@@ -156,13 +160,13 @@ $(foreach mod,$(FLATMK),\
 
 define MOD_RULE
 pipe/modules/$1/lib$1.$(SEXT): pipe/modules/$1/main.c pipe/modules/$1/flat.mk $$(MOD_$1_DEPS) $(MOD_GLOBAL_DEPS)
-	$(CC) $(CFLAGS) $(MOD_GLOBAL_CFLAGS) $(OPT_CFLAGS) $(VK_CFLAGS) $$(MOD_$1_CFLAGS) $$< $$(MOD_$1_C) -o $$@ $(LDFLAGS) $(OPT_LDFLAGS) $$(MOD_$1_LDFLAGS)
+	$(MOD_CC) $(CFLAGS) $(MOD_GLOBAL_CFLAGS) $(OPT_CFLAGS) $(VK_CFLAGS) $$(MOD_$1_CFLAGS) $$< $$(MOD_$1_C) -o $$@ $(LDFLAGS) $(OPT_LDFLAGS) $$(MOD_$1_LDFLAGS)
 endef
 $(foreach mod,$(MODULES),$(eval $(call MOD_RULE,$(mod))))
 
 define MOD_RULEXX
 pipe/modules/$1/lib$1.$(SEXT): pipe/modules/$1/main.cc pipe/modules/$1/flat.mk $$(MOD_$1_DEPS) $(MOD_GLOBAL_DEPS)
-	$(CXX) $(CXXFLAGS) $(MOD_GLOBAL_CFLAGS) $(OPT_CFLAGS) $(VK_CFLAGS) $$(MOD_$1_CFLAGS) $$< $$(MOD_$1_C) -o $$@ $(LDFLAGS) $(OPT_LDFLAGS) $$(MOD_$1_LDFLAGS)
+	$(MOD_CXX) $(CXXFLAGS) $(MOD_GLOBAL_CFLAGS) $(OPT_CFLAGS) $(VK_CFLAGS) $$(MOD_$1_CFLAGS) $$< $$(MOD_$1_C) -o $$@ $(LDFLAGS) $(OPT_LDFLAGS) $$(MOD_$1_LDFLAGS)
 endef
 $(foreach mod,$(MODULESXX),$(eval $(call MOD_RULEXX,$(mod))))
 

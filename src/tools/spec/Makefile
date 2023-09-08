@@ -1,5 +1,5 @@
-LDFLAGS=-lm
-CFLAGS=-I../.. -I.. -fopenmp -march=native -O3
+LDFLAGS=-lm $(OMP_LDFLAGS)
+CFLAGS=-I../.. -I.. $(OMP_CFLAGS) -march=native -O3
 .PHONY:luts
 
 luts:../../../bin/data/spectra.lut
