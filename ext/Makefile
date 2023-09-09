@@ -32,4 +32,4 @@ else
 endif
 
 clean: Makefile
-
+	rm -r $(BUILT)/rawspeed
