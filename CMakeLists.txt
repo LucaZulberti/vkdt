@@ -64,3 +64,7 @@ target_link_libraries(vkdt-cli cli core db qvk pipe ${VK_LIB})
 # VkDT (GUI)
 add_executable(vkdt-gui ${IMGUI_SRCS})
 target_link_libraries(vkdt-gui gui snd core db qvk pipe glfw ${VK_LIB})
+
+# Add shaders to vdkt dependency
+add_dependencies(vkdt-cli shaders)
+add_dependencies(vkdt-gui shaders)
