@@ -23,6 +23,7 @@ GUI_H=gui/gui.h\
       gui/hotkey.hh\
       gui/keyaccel.hh\
       gui/widget_dopesheet.hh\
+      gui/imconfig_user.h\
       gui/widget_draw.hh\
       gui/widget_export.hh\
       gui/widget_filebrowser.hh\
@@ -41,12 +42,13 @@ GUI_H=gui/gui.h\
       pipe/graph-traverse.inc\
       pipe/graph-history.h\
       pipe/graph-defaults.h
-GUI_CFLAGS=$(VKDT_GLFW_CFLAGS) -I../ext/imgui -I../ext/imgui/backends/
+GUI_CFLAGS=$(VKDT_GLFW_CFLAGS) -I../ext/imgui -I../ext/imgui/backends/ -DIMGUI_USER_CONFIG=\"gui/imconfig_user.h\"
 GUI_LDFLAGS=-ldl $(VKDT_GLFW_LDFLAGS) -lm -lstdc++ -rdynamic
 
 ifeq ($(VKDT_USE_FREETYPE),1)
 GUI_CFLAGS+=$(shell pkg-config --cflags freetype2) -DVKDT_USE_FREETYPE=1
 GUI_LDFLAGS+=$(shell pkg-config --libs freetype2)
+GUI_O+=../ext/imgui/misc/freetype/imgui_freetype.o
 endif
 ifeq ($(VKDT_USE_PENTABLET),1)
 GUI_CFLAGS+=-DVKDT_USE_PENTABLET=1

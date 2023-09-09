@@ -7,20 +7,17 @@ extern "C" {
 #include "pipe/graph-history.h"
 #include "api.h"
 }
+
 #include "render.h"
+
+#define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui.h"
-#include "imgui_impl_vulkan.h"
 #include "imgui_impl_glfw.h"
+#include "imgui_impl_vulkan.h"
+
 #include "imnodes.h"
 #include "widget_draw.hh"
 #include "render_view.hh"
-#if VKDT_USE_FREETYPE == 1
-#include "misc/freetype/imgui_freetype.h"
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wsubobject-linkage"
-#include "misc/freetype/imgui_freetype.cpp" // come on gcc, this is clearly not a header!
-#pragma GCC diagnostic pop
-#endif
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
@@ -157,7 +154,6 @@ extern "C" void dt_gui_init_fonts()
     ImFontConfig* font_config = (ImFontConfig*)&io.Fonts->ConfigData[n];
     font_config->RasterizerMultiply = 1.0f;
   }
-  ImGuiFreeType::BuildFontAtlas(io.Fonts, flags); // same flags
 #endif
 
   { // upload Fonts, use any command queue

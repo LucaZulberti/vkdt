@@ -278,7 +278,7 @@ namespace ImHotKey
           {
             uint16_t *k = hotkey[editingHotkey].key + scanCodeCount-1;
             k[0] = i + ImGuiKey_NamedKey_BEGIN;
-            if(k[0] >= ImGuiKey_ModCtrl)
+            if(k[0] >= ImGuiMod_Ctrl)
             { // swap control/mod to beginning
               uint16_t tmp = hotkey[editingHotkey].key[0];
               hotkey[editingHotkey].key[0] = k[0];
