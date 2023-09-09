@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.20)
 project(darktable_ng C CXX)
 
+# Use old GUI
+set(GUI_LEGACY ON)
+
 set(VKDT_VERSION 1.0.0)
 set(VKDTLIB_VERSION 1.0.0)
 
