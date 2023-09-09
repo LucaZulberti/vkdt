@@ -132,9 +132,11 @@ void render_nodes_right_panel()
         dsp[d] == dt_token("main") && nodes.dual_monitor;
       char title[20] = {0};
       snprintf(title, sizeof(title), "nodes %" PRItkn, dt_token_str(dsp[d]));
-      if(popout) ImGui::Begin(title, 0, ImGuiWindowFlags_SecondMonitor);
-      else ImGui::BeginChild(title, ImVec2(0.975*ImGui::GetWindowSize().x,
-            MIN(ImGui::GetWindowSize().y, ImGui::GetWindowSize().x*2.0f/3.0f)));
+      // FIXME
+      // if(popout) ImGui::Begin(title, 0, ImGuiWindowFlags_SecondMonitor);
+      // else
+      ImGui::BeginChild(title, ImVec2(0.975*ImGui::GetWindowSize().x,
+                                      MIN(ImGui::GetWindowSize().y, ImGui::GetWindowSize().x*2.0f/3.0f)));
 
       if(dsp[d] == dt_token("main"))
         dt_image(&vkdt.wstate.img_widget, out, 1, 1);
@@ -483,7 +485,7 @@ void render_nodes()
     int mc0 = sid&0x1f, mc1 = eid&0x1f;
 
     int err = 0;
-    if(ImGui::IsKeyDown(ImGuiKey_ModShift))
+    if(ImGui::IsKeyDown(ImGuiMod_Shift))
       err = dt_module_feedback_with_history(g, mi0, mc0, mi1, mc1);
     else
       err = dt_module_connect_with_history(g, mi0, mc0, mi1, mc1);
