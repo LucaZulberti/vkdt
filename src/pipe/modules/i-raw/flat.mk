@@ -1,3 +1,5 @@
+MOD_C=pipe/global.o\
+	  core/log.o
 # use rawspeed
 ifeq ($(VKDT_USE_RAWINPUT),1)
 RAWSPEED_I=pipe/modules/i-raw/rawspeed
