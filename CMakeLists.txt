@@ -8,6 +8,9 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug CACHE STRING "" FORCE)
 endif()
 
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    set(MACOSX TRUE)
+endif()
 
 # Inlcude CMake utilities
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
@@ -68,5 +71,5 @@ add_executable(vkdt-gui ${IMGUI_SRCS})
 target_link_libraries(vkdt-gui gui snd core db qvk pipe glfw ${VK_LIB})
 
 # Add shaders to vdkt dependency
-add_dependencies(vkdt-cli shaders)
-add_dependencies(vkdt-gui shaders)
+add_dependencies(vkdt-cli modules)
+add_dependencies(vkdt-gui modules)
