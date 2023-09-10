@@ -12,20 +12,17 @@
 
 # if you disable this, the i-raw module will not be built
 # and you will be unable to load raw images.
+# since rawspeed is a submodule this is only useful if
+# you want to avoid the recursive dependencies.
 # note that since this in on by default in here, you'll need
 # to explicitly set it to =0 and export again in config.mk to
 # switch it off effectively.
-# switched off:
-# VKDT_USE_RAWINPUT=0
-# rawspeed  (c++):
-VKDT_USE_RAWINPUT=1
-# rawler (rust):
-# VKDT_USE_RAWINPUT=2
-export VKDT_USE_RAWINPUT
+VKDT_USE_RAWSPEED=1
+export VKDT_USE_RAWSPEED
 
 # exiv2 can optionally be used to load some super basic metadata (iso
-# speed, shutter time etc) inside the i-raw module when using rawspeed.
-# that is, it is only effective if VKDT_USE_RAWINPUT=1.
+# speed, shutter time etc) inside the i-raw module. that is, you don't
+# have that you don't need to disable this.
 # VKDT_USE_EXIV2=1
 # export VKDT_USE_EXIV2
 
@@ -68,9 +65,17 @@ export VKDT_GLFW_CFLAGS VKDT_GLFW_LDFLAGS
 # VKDT_USE_QUAKE=1
 # export VKDT_USE_QUAKE
 
+
+# OS detect
+UNAME := $(shell uname)
+
 # compiler config
-CC=clang
-CXX=clang++
+CC  = clang
+CXX = clang++
+AR  = ar
+
+LDFLAGS = -Wl,-pie
+
 GLSLC=glslangValidator
 GLSLC_FLAGS=--target-env vulkan1.2
 # GLSLC=glslc
@@ -78,7 +83,48 @@ GLSLC_FLAGS=--target-env vulkan1.2
 
 # optimised flags, you may want to use -march=x86-64 for distro builds:
 OPT_CFLAGS=-Wall -pipe -O3 -march=native -DNDEBUG
-OPT_LDFLAGS=-s
-AR=ar
 
-export CC CXX GLSLC GLSLC_FLAGS OPT_CFLAGS OPT_LDFLAGS AR
+ifneq ($(UNAME),Darwin)
+SEXT = so
+
+CFLAGS   += -D_GNU_SOURCE
+CXXFLAGS += -D_GNU_SOURCE
+
+EXE_CFLAGS ?= -fPIC
+
+# Obsolete on macOS
+OPT_LDFLAGS = -s
+
+# Pass the library name as $1
+generate_shared_flags = -shared -nostartfiles -Wl,-soname,$$1.$(SEXT)
+else
+SEXT = dylib
+
+LDFLAGS += -rpath /usr/local/lib
+
+# Pass the library name as $1
+generate_shared_flags = -dynamiclib -Wl,-install_name,$$1.$(SEXT)
+endif
+
+
+# set this to 1 to signal rawspeed to build without processor specific extensions.
+# again, this is important for building packages for distros.
+RAWSPEED_PACKAGE_BUILD=0
+
+export CC CXX AR LDFLAGS GLSLC GLSLC_FLAGS OPT_CFLAGS OPT_LDFLAGS RAWSPEED_PACKAGE_BUILD SEXT generate_shared_flags
+
+# where to find glfw for the gui:
+VKDT_GLFW_CFLAGS=$(shell pkg-config --cflags glfw3)
+VKDT_GLFW_LDFLAGS=$(shell pkg-config --libs glfw3)
+export VKDT_GLFW_CFLAGS VKDT_GLFW_LDFLAGS
+
+# where to find openmp:
+ifneq ($(UNAME),Darwin)
+  OMP_CFLAGS  = -fopenmp
+  OMP_LDFLAGS = $(shell grep OpenMP_omp_LIBRARY:FILEPATH ../built/ext/rawspeed/CMakeCache.txt | cut -f2 -d=) -lgomp
+else
+  # FIXME: Not supported by macOS system clang, cannot pass -fopenmp flag
+  OMP_CFLAGS  = -I/opt/homebrew/opt/libomp/include
+  OMP_LDFLAGS = -L/opt/homebrew/opt/libomp/lib -lomp
+endif
+export OMP_CFLAGS OMP_LDFLAGS
