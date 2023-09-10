@@ -92,7 +92,11 @@ dt_module_so_load(
   memset(mod, 0, sizeof(*mod));
   mod->name = dt_token(dirname);
   char filename[3*PATH_MAX], line[PATH_MAX];
+#ifndef __APPLE__
   snprintf(filename, sizeof(filename), "%s/modules/%s/lib%s.so", dt_pipe.basedir, dirname, dirname);
+#else
+  snprintf(filename, sizeof(filename), "%s/modules/%s/lib%s.dylib", dt_pipe.basedir, dirname, dirname);
+#endif
   mod->dlhandle = 0;
   struct stat statbuf;
   if(!stat(filename, &statbuf))
