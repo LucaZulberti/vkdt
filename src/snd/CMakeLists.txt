@@ -1,0 +1,10 @@
+add_library(snd OBJECT)
+
+find_package(ALSA)
+if (ALSA_FOUND)
+  target_sources(snd PRIVATE alsa.c)
+  include_directories(${ALSA_INCLUDE_DIRS})
+  target_link_libraries (snd ${ALSA_LIBRARIES})
+else()
+  target_sources(snd PRIVATE none.c)
+endif(ALSA_FOUND)

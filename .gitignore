@@ -4,6 +4,7 @@
 *ctooltips
 *ptooltips
 built/
+build/
 src/core/version.h
 bin/config.mk
 bin/vkdt*
