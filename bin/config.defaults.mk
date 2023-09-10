@@ -47,11 +47,6 @@ export VKDT_USE_RAWSPEED
 # VKDT_USE_FFMPEG=1
 # export VKDT_USE_FFMPEG
 
-# where to find glfw for the gui:
-VKDT_GLFW_CFLAGS=$(shell pkg-config --cflags glfw3)
-VKDT_GLFW_LDFLAGS=$(shell pkg-config --libs glfw3)
-export VKDT_GLFW_CFLAGS VKDT_GLFW_LDFLAGS
-
 # enable this if you have a custom build of glfw that supports the following
 # three functions: glfwSetPenTabletDataCallback,
 # glfwSetPenTabletCursorCallback, glfwSetPenTabletProximityCallback.
@@ -110,3 +105,19 @@ endif
 RAWSPEED_PACKAGE_BUILD=0
 
 export CC CXX GLSLC GLSLC_FLAGS OPT_CFLAGS OPT_LDFLAGS AR RAWSPEED_PACKAGE_BUILD SEXT generate_shared_flags
+
+# where to find glfw for the gui:
+VKDT_GLFW_CFLAGS=$(shell pkg-config --cflags glfw3)
+VKDT_GLFW_LDFLAGS=$(shell pkg-config --libs glfw3)
+export VKDT_GLFW_CFLAGS VKDT_GLFW_LDFLAGS
+
+# where to find openmp:
+ifneq ($(UNAME),Darwin)
+  OMP_CFLAGS  = -fopenmp
+  OMP_LDFLAGS = $(shell grep OpenMP_omp_LIBRARY:FILEPATH ../built/ext/rawspeed/CMakeCache.txt | cut -f2 -d=) -lgomp
+else
+  # FIXME: Not supported by macOS system clang, cannot pass -fopenmp flag
+  OMP_CFLAGS  = -I/opt/homebrew/opt/libomp/include
+  OMP_LDFLAGS = -L/opt/homebrew/opt/libomp/lib -lomp
+endif
+export OMP_CFLAGS OMP_LDFLAGS
