@@ -129,8 +129,10 @@ MOD_GLOBAL_DEPS=\
   pipe/module.h\
   pipe/node.h\
   pipe/connector.h\
-  pipe/connector.c\
-  pipe/connector.inc
+  pipe/connector.o\
+  pipe/connector.inc\
+  pipe/global.o\
+  pipe/graph-io.o
 MOD_GLOBAL_CFLAGS=-Ipipe -I. -fPIC
 
 # expand all cflags/ldflags/deps/extra-c from flat.mk:
