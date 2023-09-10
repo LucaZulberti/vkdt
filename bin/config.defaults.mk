@@ -65,9 +65,17 @@ export VKDT_GLFW_CFLAGS VKDT_GLFW_LDFLAGS
 # VKDT_USE_QUAKE=1
 # export VKDT_USE_QUAKE
 
+
+# OS detect
+UNAME := $(shell uname)
+
 # compiler config
-CC=clang
-CXX=clang++
+CC  = clang
+CXX = clang++
+AR  = ar
+
+LDFLAGS = -Wl,-pie
+
 GLSLC=glslangValidator
 GLSLC_FLAGS=--target-env vulkan1.2
 # GLSLC=glslc
@@ -75,11 +83,30 @@ GLSLC_FLAGS=--target-env vulkan1.2
 
 # optimised flags, you may want to use -march=x86-64 for distro builds:
 OPT_CFLAGS=-Wall -pipe -O3 -march=native -DNDEBUG
-OPT_LDFLAGS=-s
-AR=ar
+
+ifneq ($(UNAME),Darwin)
+SEXT = so
+
+CFLAGS   += -D_GNU_SOURCE
+CXXFLAGS += -D_GNU_SOURCE
+
+EXE_CFLAGS ?= -fPIC
+
+# Obsolete on macOS
+OPT_LDFLAGS = -s
+
+# Pass the library name as $1
+generate_shared_flags = -shared -nostartfiles -Wl,-soname,$$1.$(SEXT)
+else
+SEXT = dylib
+
+# Pass the library name as $1
+generate_shared_flags = -dynamiclib -Wl,-install_name,$$1.$(SEXT)
+endif
+
 
 # set this to 1 to signal rawspeed to build without processor specific extensions.
 # again, this is important for building packages for distros.
 RAWSPEED_PACKAGE_BUILD=0
 
-export CC CXX GLSLC GLSLC_FLAGS OPT_CFLAGS OPT_LDFLAGS AR RAWSPEED_PACKAGE_BUILD
+export CC CXX GLSLC GLSLC_FLAGS OPT_CFLAGS OPT_LDFLAGS AR RAWSPEED_PACKAGE_BUILD SEXT generate_shared_flags

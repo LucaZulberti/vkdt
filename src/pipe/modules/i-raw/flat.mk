@@ -16,5 +16,5 @@ endif
 ifeq ($(VKDT_USE_EXIV2),1)
 MOD_CFLAGS+=$(shell pkg-config --cflags exiv2) -DVKDT_USE_EXIV2=1
 MOD_LDFLAGS+=$(shell pkg-config --libs exiv2)
-pipe/modules/i-raw/libi-raw.so:pipe/modules/i-raw/exif.h
+pipe/modules/i-raw/libi-raw.$(SEXT):pipe/modules/i-raw/exif.h
 endif
