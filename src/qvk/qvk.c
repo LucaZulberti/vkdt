@@ -159,9 +159,10 @@ qvk_create_swapchain()
   VkSurfaceFormatKHR *avail_surface_formats = alloca(sizeof(VkSurfaceFormatKHR) * num_formats);
   vkGetPhysicalDeviceSurfaceFormatsKHR(qvk.physical_device, qvk.surface, &num_formats, avail_surface_formats);
 
-  dt_log(s_log_qvk, "available surface formats:");
-  for(int i = 0; i < num_formats; i++)
-    dt_log(s_log_qvk, qvk_format_to_string(avail_surface_formats[i].format));
+  // FIXME: Print only when requested
+  // dt_log(s_log_qvk, "available surface formats:");
+  // for(int i = 0; i < num_formats; i++)
+  //   dt_log(s_log_qvk, qvk_format_to_string(avail_surface_formats[i].format));
 
 
   VkFormat acceptable_formats[] = {
@@ -175,7 +176,8 @@ qvk_create_swapchain()
     for(int j = 0; j < num_formats; j++)
       if(acceptable_formats[i] == avail_surface_formats[j].format) {
         qvk.surf_format = avail_surface_formats[j];
-        dt_log(s_log_qvk, "colour space: %u", qvk.surf_format.colorSpace);
+        // FIXME: Print only when requested
+        // dt_log(s_log_qvk, "colour space: %u", qvk.surf_format.colorSpace);
         goto out;
       }
   }
