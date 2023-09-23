@@ -291,14 +291,14 @@ dt_thumbnails_cache_one(
   clock_t beg = clock();
   if(dt_graph_export(graph, &param) != VK_SUCCESS)
   {
-    dt_log(s_log_db, "[thm] running the thumbnail graph failed on image '%s'!", filename);
+    dt_log(s_log_db, "[thm] running the thumbnail graph export failed on image '%s'!", filename);
     // mark as dead
     snprintf(cfgfilename, sizeof(cfgfilename), "%s/data/bomb.bc1", dt_pipe.basedir);
     link(cfgfilename, bc1filename);
     return 4;
   }
   clock_t end = clock();
-  dt_log(s_log_perf, "[thm] ran graph in %3.0fms", 1000.0*(end-beg)/CLOCKS_PER_SEC);
+  dt_log(s_log_perf, "[thm] ran graph export in %3.0fms", 1000.0*(end-beg)/CLOCKS_PER_SEC);
 
   return VK_SUCCESS;
 }
