@@ -74,7 +74,8 @@ CC  = clang
 CXX = clang++
 AR  = ar
 
-LDFLAGS = -Wl,-pie
+LDFLAGS =
+EXE_LDFLAGS = -Wl,-pie
 
 GLSLC=glslangValidator
 GLSLC_FLAGS=--target-env vulkan1.2
@@ -111,7 +112,7 @@ endif
 # again, this is important for building packages for distros.
 RAWSPEED_PACKAGE_BUILD=0
 
-export CC CXX AR LDFLAGS GLSLC GLSLC_FLAGS OPT_CFLAGS OPT_LDFLAGS RAWSPEED_PACKAGE_BUILD SEXT generate_shared_flags
+export CC CXX AR LDFLAGS EXE_LDFLAGS GLSLC GLSLC_FLAGS OPT_CFLAGS OPT_LDFLAGS RAWSPEED_PACKAGE_BUILD SEXT generate_shared_flags
 
 # where to find glfw for the gui:
 VKDT_GLFW_CFLAGS=$(shell pkg-config --cflags glfw3)

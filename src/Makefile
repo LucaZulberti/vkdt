@@ -106,19 +106,19 @@ ext/imgui/examples/%.o: ext/imgui/examples/%.cpp Makefile
 # ======================
 ../bin/vkdt: $(GUI_O) $(QVK_O) $(CORE_O) $(SND_O) $(PIPE_O) $(DB_O) Makefile
 	$(CC) $(GUI_O) $(QVK_O) $(CORE_O) $(SND_O) $(PIPE_O) $(DB_O) -o $@ \
-    $(LDFLAGS) $(QVK_LDFLAGS) $(GUI_LDFLAGS) $(SND_LDFLAGS) $(PIPE_LDFLAGS) $(CORE_LDFLAGS) $(DB_LDFLAGS) $(OPT_LDFLAGS)
+    $(LDFLAGS) $(EXE_LDFLAGS) $(QVK_LDFLAGS) $(GUI_LDFLAGS) $(SND_LDFLAGS) $(PIPE_LDFLAGS) $(CORE_LDFLAGS) $(DB_LDFLAGS) $(OPT_LDFLAGS)
 
 # command line interface
 # ======================
 ../bin/vkdt-cli: $(CLI_O) $(QVK_O) $(CORE_O) $(PIPE_O) $(DB_O) Makefile
 	$(CC) $(CLI_O) $(QVK_O) $(CORE_O) $(PIPE_O) $(DB_O) -o $@ \
-    $(LDFLAGS) $(CLI_LDFLAGS) $(QVK_LDFLAGS) $(PIPE_LDFLAGS) $(CORE_LDFLAGS) $(DB_LDFLAGS) $(OPT_LDFLAGS)
+    $(LDFLAGS) $(EXE_LDFLAGS) $(CLI_LDFLAGS) $(QVK_LDFLAGS) $(PIPE_LDFLAGS) $(CORE_LDFLAGS) $(DB_LDFLAGS) $(OPT_LDFLAGS)
 
 # parameter optimiser
 # ======================
 ../bin/vkdt-fit: $(FIT_O) $(QVK_O) $(CORE_O) $(PIPE_O) $(DB_O) Makefile
 	$(CC) $(FIT_O) $(QVK_O) $(CORE_O) $(PIPE_O) $(DB_O) -o $@ \
-    $(LDFLAGS) $(FIT_LDFLAGS) $(QVK_LDFLAGS) $(PIPE_LDFLAGS) $(CORE_LDFLAGS) $(DB_LDFLAGS) $(OPT_LDFLAGS)
+    $(LDFLAGS) $(EXE_LDFLAGS) $(FIT_LDFLAGS) $(QVK_LDFLAGS) $(PIPE_LDFLAGS) $(CORE_LDFLAGS) $(DB_LDFLAGS) $(OPT_LDFLAGS)
 
 # library
 # ======================
